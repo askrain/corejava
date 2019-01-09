@@ -17,7 +17,7 @@ public class CreatingStreams
    {
       final int SIZE = 10;
       List<T> firstElements = stream
-            .limit(SIZE + 1)
+            .limit(SIZE + 1) //限制集合的数据为前11个 注意：第一个为""字符串
             .collect(Collectors.toList());
       System.out.print(title + ": ");
       for (int i = 0; i < firstElements.size(); i++)
@@ -36,26 +36,34 @@ public class CreatingStreams
             StandardCharsets.UTF_8);
 
       Stream<String> words = Stream.of(contents.split("\\PL+"));
-      show("words", words);
+      show("words", words);//words: , This, is, the, Project, Gutenberg, Etext, of, Alice, in, ...
+
       Stream<String> song = Stream.of("gently", "down", "the", "stream");
-      show("song", song);
+      show("song", song);//song: gently, down, the, stream
+
       Stream<String> silence = Stream.empty();
-      show("silence", silence);
+      show("silence", silence);//silence:
 
+      //Stream.generate() 参数为不接受任何引元的函数  是个创建无限流的静态方法 产生的值时反复调用这个函数产生的
       Stream<String> echos = Stream.generate(() -> "Echo");
-      show("echos", echos);
+      show("echos", echos);//echos: Echo, Echo, Echo, Echo, Echo, Echo, Echo, Echo, Echo, Echo, ...
 
+      //使用方法引用的方法创建无限流  注意格式：相当于代用类的静态方法（不家小括号）
       Stream<Double> randoms = Stream.generate(Math::random);
-      show("randoms", randoms);
+      show("randoms", randoms);//randoms: 0.9829096425597169, 0.3465237368630335, 0.2768086973142173, 0.4895816559525238, 0.5858459841304908, 0.7702
+     // 498534090478, 0.29752965544179344, 0.8446365048101186, 0.3253218862462002, 0.8521232846605891, ...
 
+      //也是创建无限流的方法 包含种子  在种子上调用函数产生的值等
       Stream<BigInteger> integers = Stream.iterate(BigInteger.ONE,
             n -> n.add(BigInteger.ONE));
-      show("integers", integers);
+      show("integers", integers);//integers: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...
 
+      //
       Stream<String> wordsAnotherWay = Pattern.compile("\\PL+").splitAsStream(
             contents);
-      show("wordsAnotherWay", wordsAnotherWay);
+      show("wordsAnotherWay", wordsAnotherWay);//输出结果和第一个一样
 
+      //产生一个流，它的元素是文件中的行 且制定了字符集
       try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8))
       {
          show("lines", lines);

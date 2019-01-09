@@ -16,17 +16,19 @@ public class OptionalTest
       Optional<String> optionalValue = wordList.stream()
          .filter(s -> s.contains("fred"))
          .findFirst();
-      System.out.println(optionalValue.orElse("No word") + " contains fred");
+      System.out.println(optionalValue.orElse("No word") + " contains fred");//No word contains fred
+
 
       Optional<String> optionalString = Optional.empty();
       String result = optionalString.orElse("N/A");
       System.out.println("result: " + result);
       result = optionalString.orElseGet(() -> Locale.getDefault().getDisplayName());
-      System.out.println("result: " + result);
+      System.out.println("result: " + result);//result: 中文 (中国)
+
       try
       {
          result = optionalString.orElseThrow(IllegalStateException::new);
-         System.out.println("result: " + result);
+         System.out.println("result: " + result);//因为为空，所以抛了错误
       }
       catch (Throwable t)
       {
@@ -36,15 +38,18 @@ public class OptionalTest
       optionalValue = wordList.stream()
          .filter(s -> s.contains("red"))
          .findFirst();
-      optionalValue.ifPresent(s -> System.out.println(s + " contains red"));
+      optionalValue.ifPresent(s -> System.out.println(s + " contains red"));//Prepared contains red
+
 
       Set<String> results = new HashSet<>();
       optionalValue.ifPresent(results::add);
       Optional<Boolean> added = optionalValue.map(results::add);
-      System.out.println(added);
+      System.out.println(added);//Optional[false]
 
-      System.out.println(inverse(4.0).flatMap(OptionalTest::squareRoot));
-      System.out.println(inverse(-1.0).flatMap(OptionalTest::squareRoot));
+
+      System.out.println(inverse(4.0).flatMap(OptionalTest::squareRoot));//Optional[0.5]
+
+      System.out.println(inverse(-1.0).flatMap(OptionalTest::squareRoot));//以下都是Optional.empty
       System.out.println(inverse(0.0).flatMap(OptionalTest::squareRoot));
       Optional<Double> result2 = Optional.of(-4.0)
          .flatMap(OptionalTest::inverse).flatMap(OptionalTest::squareRoot);
